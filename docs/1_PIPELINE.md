@@ -1,6 +1,6 @@
 # 1. Pipeline Ideal - Estrutura e Stages
 
-## 🏗️ Visão Geral
+##  Visão Geral
 
 ```
 Code Push → SAST → Build → DAST → Deploy Staging → Security Scan → Deploy Prod
@@ -8,7 +8,7 @@ Code Push → SAST → Build → DAST → Deploy Staging → Security Scan → D
 
 ---
 
-## 📊 Stages do Pipeline
+##  Stages do Pipeline
 
 ### **Stage 1: SAST (Static Analysis) - 5 min**
 **Quando:** Ao fazer push
@@ -19,7 +19,7 @@ Code Push → SAST → Build → DAST → Deploy Staging → Security Scan → D
 
 **Ação:** Bloqueia merge se CRITICAL/HIGH
 
-**Viabilidade:** ✅ Executa em paralelo, não bloqueia devs muito
+**Viabilidade:**  Executa em paralelo, não bloqueia devs muito
 
 ---
 
@@ -73,28 +73,28 @@ Code Push → SAST → Build → DAST → Deploy Staging → Security Scan → D
 ### **Stage 7: Approval & Deploy Produção - Manual**
 **Quando:** Validação manual do Security Champion
 **Requerimentos:**
-- Code review de segurança ✅
-- DAST passou ✅
-- Sem dependências vulneráveis ✅
-- Auditoria automática passou ✅
+- Code review de segurança 
+- DAST passou 
+- Sem dependências vulneráveis 
+- Auditoria automática passou 
 
 ---
 
-## ⏱️ Timeline Total
+## ⏱ Timeline Total
 
 | Stage | Tempo | Bloqueante |
 |-------|-------|-----------|
-| SAST | 5 min | ✅ Sim |
-| Build | 10 min | ✅ Sim |
-| DAST | 15 min | ❌ Não (feedback) |
-| IaC | 3 min | ✅ Sim |
+| SAST | 5 min |  Sim |
+| Build | 10 min |  Sim |
+| DAST | 15 min |  Não (feedback) |
+| IaC | 3 min |  Sim |
 | Deploy Staging | 10 min | - |
-| Runtime Security | 5 min | ❌ Não (observação) |
+| Runtime Security | 5 min |  Não (observação) |
 | **Total** | **~45 min** | - |
 
 ---
 
-## 🔄 Parallelização
+##  Parallelização
 
 ```
 SAST + IaC + Build (paralelo)
@@ -110,12 +110,12 @@ Deploy Prod
 
 ---
 
-## ✅ Viabilidade para 40 devs
+##  Viabilidade para 40 devs
 
 | Aspecto | Status | Justificativa |
 |--------|--------|---|
-| Custo | ✅ Baixo | Maioria open source |
-| Tempo setup | ✅ 3-4 weeks | CI/CD com GitHub Actions |
-| Capacidade | ✅ Sim | Roda em containers, escalável |
-| Experiência | ⚠️ Média | Requer 1-2 DevSecOps seniors |
+| Custo |  Baixo | Maioria open source |
+| Tempo setup |  3-4 weeks | CI/CD com GitHub Actions |
+| Capacidade |  Sim | Roda em containers, escalável |
+| Experiência |  Média | Requer 1-2 DevSecOps seniors |
 

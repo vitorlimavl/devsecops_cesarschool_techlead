@@ -10,7 +10,7 @@ Avaliação Técnica: Pipeline DevSecOps para API de Pagamentos PIX
 
 ---
 
-## 📋 Documentação
+##  Documentação
 
 1. **[PIPELINE.md](./docs/1_PIPELINE.md)** - Pipeline ideal e ferramentas
 2. **[FERRAMENTAS.md](./docs/2_FERRAMENTAS.md)** - Open source vs Comercial
@@ -21,7 +21,7 @@ Avaliação Técnica: Pipeline DevSecOps para API de Pagamentos PIX
 
 ---
 
-## 🎯 Resumo Executivo
+##  Resumo Executivo
 
 **Abordagem:** Incrementalismo seguro com foco em PCI DSS 4.0
 

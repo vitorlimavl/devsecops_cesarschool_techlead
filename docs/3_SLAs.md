@@ -4,7 +4,7 @@
 
 ---
 
-## 📊 Tabela SLA
+##  Tabela SLA
 
 | Severidade | Definição | Resposta | Resolução | Escalação |
 |-----------|-----------|----------|-----------|-----------|
@@ -15,7 +15,7 @@
 
 ---
 
-## 🚨 CRITICAL (Tempo Real)
+##  CRITICAL (Tempo Real)
 
 **Exemplos:**
 - Remote Code Execution
@@ -24,19 +24,19 @@
 - Vulnerabilidade conhecida com POC público (CVE 9.0+)
 
 **Ação:**
-1. ⏸️ **Pausar** deployment
-2. 🔴 **Rollback** imediato se em produção
-3. 📞 **Page** CTO/CISO
-4. 🔍 **Investigar** impacto em dados de clientes
-5. 📝 **Notificar** compliance/legal
-6. 🚀 **Deploy** hotfix após validação
+1.  **Pausar** deployment
+2.  **Rollback** imediato se em produção
+3.  **Page** CTO/CISO
+4.  **Investigar** impacto em dados de clientes
+5.  **Notificar** compliance/legal
+6.  **Deploy** hotfix após validação
 
 **SLA de resposta:** 15 minutos
 **SLA de resolução:** 4 horas
 
 ---
 
-## 🔴 HIGH (Dentro de 1 dia)
+##  HIGH (Dentro de 1 dia)
 
 **Exemplos:**
 - Authentication bypass (mas com múltiplos passos)
@@ -50,7 +50,7 @@
 
 ---
 
-## 🟠 MEDIUM (Dentro de 1 semana)
+##  MEDIUM (Dentro de 1 semana)
 
 **Exemplos:**
 - XSS vulnerabilities
@@ -64,7 +64,7 @@
 
 ---
 
-## 🟡 LOW (Backlog)
+##  LOW (Backlog)
 
 **Exemplos:**
 - Code quality issues
@@ -77,7 +77,7 @@
 
 ---
 
-## 📈 Distribuição Esperada
+##  Distribuição Esperada
 
 Baseado em dados de pipelines similares:
 

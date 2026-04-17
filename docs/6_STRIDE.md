@@ -6,7 +6,7 @@
 
 ---
 
-## 🎯 Contexto
+##  Contexto
 
 ```
 Cliente (Mobile App) → API Gateway (AWS) → Node.js Service
@@ -26,7 +26,7 @@ Cliente (Mobile App) → API Gateway (AWS) → Node.js Service
 
 ---
 
-## 🔍 STRIDE Analysis
+##  STRIDE Analysis
 
 ### **S - SPOOFING (Impersonação)**
 
@@ -160,65 +160,65 @@ Cliente (Mobile App) → API Gateway (AWS) → Node.js Service
 
 ---
 
-## 📊 Risk Matrix
+##  Risk Matrix
 
 | ID | Ameaça | Impacto | CVSS | Severidade |
 |----|--------|--------|------|-----------|
-| 1.1 | Session Hijacking | Alta | 8.5 | 🔴 CRITICAL |
-| 2.1 | SQL Injection | Crítica | 9.0 | 🔴 CRITICAL |
-| 2.2 | Authz Bypass | Crítica | 9.0 | 🔴 CRITICAL |
-| 4.3 | Secrets Leaked | Crítica | 9.5 | 🔴 CRITICAL |
-| 6.4 | Priv Escalation | Crítica | 9.5 | 🔴 CRITICAL |
-| 1.2 | Weak Password | Alta | 7.0 | 🟠 HIGH |
-| 3.1 | No Audit Trail | Alta | 7.0 | 🟠 HIGH |
-| 5.1 | Rate Limiting | Alta | 7.5 | 🟠 HIGH |
+| 1.1 | Session Hijacking | Alta | 8.5 |  CRITICAL |
+| 2.1 | SQL Injection | Crítica | 9.0 |  CRITICAL |
+| 2.2 | Authz Bypass | Crítica | 9.0 |  CRITICAL |
+| 4.3 | Secrets Leaked | Crítica | 9.5 |  CRITICAL |
+| 6.4 | Priv Escalation | Crítica | 9.5 |  CRITICAL |
+| 1.2 | Weak Password | Alta | 7.0 |  HIGH |
+| 3.1 | No Audit Trail | Alta | 7.0 |  HIGH |
+| 5.1 | Rate Limiting | Alta | 7.5 |  HIGH |
 
 ---
 
-## ✅ Mitigations Status
+##  Mitigations Status
 
 **Green (implementado):**
-- ✅ HTTPS + TLS 1.2
-- ✅ JWT signed RS256
-- ✅ Bcrypt password
-- ✅ 2FA (TOTP)
-- ✅ SQL prepared statements
-- ✅ Rate limiting
-- ✅ Input validation
+-  HTTPS + TLS 1.2
+-  JWT signed RS256
+-  Bcrypt password
+-  2FA (TOTP)
+-  SQL prepared statements
+-  Rate limiting
+-  Input validation
 
 **Yellow (partial):**
-- ⚠️ Audit logging (não immutable)
-- ⚠️ Secrets management (alguns em .env)
-- ⚠️ Error handling (alguns verbose)
+-  Audit logging (não immutable)
+-  Secrets management (alguns em .env)
+-  Error handling (alguns verbose)
 
 **Red (não implementado):**
-- ❌ API response signing (HMAC)
-- ❌ Device binding
-- ❌ Log immutability
-- ❌ Certificate pinning
+-  API response signing (HMAC)
+-  Device binding
+-  Log immutability
+-  Certificate pinning
 
 ---
 
-## 🎯 Implementação Roadmap
+##  Implementação Roadmap
 
 ### **Semana 1-2:**
-- ✅ HTTPS + TLS
-- ✅ Fix error messages
-- ✅ Move secrets to AWS Secrets Manager
+-  HTTPS + TLS
+-  Fix error messages
+-  Move secrets to AWS Secrets Manager
 
 ### **Semana 3-4:**
-- ✅ HMAC signing em API
-- ✅ Audit logs immutable
-- ✅ Certificate pinning
+-  HMAC signing em API
+-  Audit logs immutable
+-  Certificate pinning
 
 ### **Semana 5-6:**
-- ✅ Device binding
-- ✅ WebAuthn
-- ✅ Cross-sign logs
+-  Device binding
+-  WebAuthn
+-  Cross-sign logs
 
 ---
 
-## 📝 Deliverable
+##  Deliverable
 
 **Documento de Threat Model:**
 
