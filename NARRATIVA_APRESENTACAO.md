@@ -1,14 +1,14 @@
-# Narrativa Humana - DevSecOps Strategy: Protegendo o PIX na Nuvem
+# Narrativa de Apresentação - DevSecOps Strategy: Protegendo o PIX na Nuvem
 
-## INTRODUÇÃO: Por Que Estamos Aqui
+---
 
-Olha, a realidade é essa: quando você trabalha com PIX em 2026, você não está só construindo uma API. Você está gerenciando confiança em tempo real. Cada transação que passa por aqui é dinheiro de verdade saindo da conta de uma pessoa e entrando na conta de outra.
+## ABERTURA
 
-O que a gente está apresentando aqui não é um projeto de segurança. É um projeto de **viabilidade do negócio**. Porque sabe que acontece quando uma fintech sofre um ataque crítico? Não é só perda de dados — é perda de licença, multa de conformidade, marca destruída no mercado.
+Boa noite professor. Vamos apresentar uma estratégia de DevSecOps para uma API de pagamentos PIX. O cenário que recebemos foi claro: uma fintech com 40 desenvolvedores em 5 squads, operando em Node.js com Kubernetes na AWS, com conformidade obrigatória em PCI DSS 4.0.
 
-Então a gente desenhou isso em 6 meses porque fintech não tem luxo de ficar 2 anos "estudando segurança". Você precisa de proteção **agora**, maturidade **depois**, e excelência **sempre**. É incrementalismo, não é fé cega em metodologia. Quick wins na frente, arquitetura no meio, automação no fundo.
+Escolhemos esse escopo porque reflete a realidade de fintechs em produção. Não é um caso hipotético. É o stack que está funcionando em empresas como essa que precisam lidar com transações reais, dados sensíveis de clientes, e requisitos regulatórios rígidos.
 
-A stack que a gente escolheu (Node.js + K8s + AWS) não é acaso. É o que tá rodando em produção em fintech séria. E a gente sabe que 40 devs em 5 squads não conseguem seguir complexidade infinita — então tudo aqui foi feito pra ser simples, auditável, e **executável**.
+A proposta é um plano de 6 meses — não porque seja o tempo mínimo, mas porque é realista. Segurança em fintech não se constrói em 2 semanas, mas também não pode ficar esperando anos. Precisamos de proteção agora, maturidade depois, excelência ao final.
 
 ---
 
@@ -16,178 +16,176 @@ A stack que a gente escolheu (Node.js + K8s + AWS) não é acaso. É o que tá r
 
 "Um plano de execução de 6 meses para blindagem da stack (Node.js/K8s/AWS), mitigação de risco transacional e conformidade rigorosa com o PCI DSS 4.0."
 
-Basicamente, a gente tá falando de três coisas aqui: **Alta Velocidade**, **Zero Gargalos**, **Secure by Design**.
+O que a gente está propondo aqui tem três objetivos principais: Alta velocidade de deploy, zero gargalos administrativos, e segurança integrada no design.
 
-Quando a gente diz "alta velocidade", não é só sobre deploy rápido. É sobre você conseguir colocar features seguras no mercado sem ficar esperando semanas de aprovação de segurança. O pipeline que a gente vai mostrar roda em 25 minutos.
+Alta velocidade não significa "soltar código sem checagem". Significa que um desenvolvedor consegue enviar uma feature segura para produção sem ficar esperando semanas por aprovação de segurança. O pipeline que vamos mostrar roda em 25 minutos do commit até a decisão de deploy.
 
-"Zero gargalos" significa que a segurança não vira o gargalo do negócio. Não vira aquela história de "ah, a gente quer lançar, mas o security champion tá de férias e a gente fica preso". Segurança integrada, distribuída nos squads, automação onde é possível.
+Zero gargalos significa que segurança não vira o vilão que atrasa o negócio. Não é aquela situação onde um projeto inteiro fica preso porque o responsável por segurança tá indisponível. A segurança fica distribuída nos squads, com automação onde é possível.
 
-E "secure by design" é o mais importante. Porque a diferença entre um projeto que vai dar problema e um que vai ficar firme é se você pensa em segurança **durante** o design, não **depois**. Threat modeling no começo de uma feature custa 1 dia. Descobrir uma falha crítica em produção custa 10 dias + dano reputacional.
-
----
-
-## SLIDE 2: As Ameaças Reais (STRIDE Aplicado)
-
-Aqui a gente tá mostrando a arquitetura do PIX com as ameaças reais que um attacker tentaria explorar.
-
-**SPOOFING (Fraude de Autenticação PIX):** É um cara conseguindo fazer uma transferência se passando por você. Ele rouba seu token JWT, ou consegue adivinhar sua senha. Isso é crítico porque PIX é imediato — não tem chance de reverter depois. A gente mitiga com 2FA forte, token com expiração curta (15 minutos), e device binding.
-
-**DoS (Flood de Requests no Endpoint):** Alguém escreve um script e fica mandando 10 mil requisições por segundo. O servidor fica lento, usuários legítimos não conseguem fazer transação. A gente bloqueia com rate limiting agressivo — AWS WAF, circuit breaker no código, auto-scaling automático.
-
-A grande questão aqui: **ferramentas encontram bugs no código. Threat modeling encontra falhas na ARQUITETURA.** Um SAST pode achar SQL injection. Mas ele nunca vai achar que você desenhou o fluxo de autorização errado. Isso é threat modeling.
-
-Por isso: "Corrigir na fase de design é 100x mais barato." Se você descobre na produção que o fluxo tá quebrado, você precisa parar o sistema inteiro, fazer rollback, investigar quem foi afetado, notificar compliance. Rola R$ 500k+ fácil.
+E segurança integrada no design é o ponto crítico. A diferença entre um projeto que vai ter problemas e um que vai ser robusto é pensar em segurança durante a arquitetura, não depois de pronto. Quando você faz threat modeling no começo de uma feature, custa um dia de trabalho. Quando descobrem uma falha de autorização em produção, custam 10 dias mais dano reputacional. A matemática é simples.
 
 ---
 
-## SLIDE 3: O Pipeline - Código até Produção
+## SLIDE 2: As Ameaças Reais — STRIDE Aplicado
 
-Aqui a gente tá mostrando os 4 guardrails que todo commit passa:
+Aqui estamos analisando a arquitetura PIX com as ameaças que um atacante tentaria explorar.
 
-**CÓDIGO:** Lint & Secret Scan. Procurando por coisa óbvia — credencial hardcoded, padrão ruim de código, vulnerable dependency.
+Começando com SPOOFING: é quando alguém consegue fazer uma transação fingindo ser outro usuário. Rouba o token JWT, ou consegue descobrir a senha. Isso é crítico no PIX porque é imediato — não há possibilidade de reverter depois. Mitigamos com autenticação de dois fatores robusta, tokens com expiração curta (15 minutos), e validação baseada no dispositivo.
 
-**BUILD:** SAST & SCA. Aqui entra SonarQube (análise estática), npm audit (vulnerabilidades conhecidas), Trivy (scanning de imagem Docker). A gente pergunta: "Esse código tem vulnerabilidade conhecida?"
+Segundo, DoS: alguém escreve um script e envia 10 mil requisições por segundo. O servidor fica lento, usuários legítimos não conseguem fazer transações. Bloqueamos com rate limiting — AWS WAF para as bordas, circuit breaker no código, auto-scaling automático.
 
-**REGISTRY:** Container Security. Imagem Docker antes de ir pro registry passa por scanning novamente. A gente não deixa uma imagem com vulnerabilidade crítica ir pra ECR.
+Há uma distinção importante aqui: ferramentas de SAST encontram bugs no código. Threat modeling encontra problemas na arquitetura. Um scanner pode achar uma SQL injection perdida no código. Mas nunca vai detectar que você desenhou o fluxo de autorização de forma que um usuário consegue acessar a conta de outro. Isso só aparece em threat modeling.
 
-**CLOUD:** DAST. Agora a imagem tá em staging, rodando de verdade. A gente manda um OWASP ZAP atacar a API simulando um attacker real — tentando SQL injection, XXS, autenticação fraca, tudo.
-
-A mensagem final é crucial: "Nenhuma camada sozinha cobre todas as ameaças (STRIDE). O pipeline AUTOMATIZA a proteção e garante que o código só avança se estiver blindado."
+Por isso corrigir na fase de design é muito mais econômico. Se você descobre em produção que o fluxo está quebrado, precisa parar o sistema, fazer rollback, investigar quem foi afetado, notificar compliance, avisar clientes. Isso facilmente ultrapassa R$ 500 mil em impacto financeiro e reputacional.
 
 ---
 
-## SLIDE 4: PCI DSS 4.0 - Open Source vs Comercial
+## SLIDE 3: O Pipeline — Código até Produção
 
-Essa é a conversa mais importante financeira do projeto.
+Aqui mostramos os quatro guardrails que cada commit passa:
 
-Conformidade PCI DSS é **mandatória** pro PIX. Você não escolhe. E quando se prepara pra auditoria, precisa provar que tem ferramentas de segurança. Aqui vem a pegadinha:
+Primeiro, CÓDIGO: Lint e Secret Scan. Procuramos por coisas óbvias — credenciais hardcoded no repositório, padrões ruins de código, dependências conhecidas como vulneráveis.
 
-"Ferramentas comerciais são caras, mas vão me passar na auditoria mais fácil."
+Segundo, BUILD: SAST e SCA. Aqui entra SonarQube (análise estática de código), npm audit (verificação de vulnerabilidades conhecidas), Trivy (scanning de imagem Docker). Perguntamos: esse código tem vulnerabilidade documentada?
 
-Mentira. O que o auditor quer é rastreabilidade. Se você usou SonarQube Community (open source) e documentou tudo, passou. Se usou Checkmarx (caro demais) mas não documentou, não passa.
+Terceiro, REGISTRY: Container Security. A imagem Docker passa por scanning novamente antes de ser enviada ao registro. Não deixamos uma imagem com vulnerabilidade crítica chegar ao ECR.
 
-Open source te dá auditoria **em código aberto**. Você explica pro auditor exatamente como funciona, porque o código tá lá. Comercial te dá suporte de vendor, mas **não é requisito pra PCI DSS**.
+Quarto, CLOUD: DAST. Agora a imagem está em staging, rodando de verdade. Enviamos OWASP ZAP para atacar a API simulando um atacante real — tentando SQL injection, XSS, autenticação fraca.
 
-O trade-off é real:
-- Open source: mais barato, mais auditável, comunidade forte, você precisa de ops skill
-- Comercial: mais caro, menos transparência, suporte premium, menos burn-out
-
-A gente escolheu 80% open source porque fintech de 40 devs não tem 200k/ano pra security tools. E porque open source é auditável. Ponto.
+A conclusão é importante: nenhuma camada sozinha cobre todas as ameaças. O pipeline automatiza a proteção e garante que o código só avança se tiver passado por todos esses controles.
 
 ---
 
-## SLIDE 5: SLAs por Severidade - Porque Velocidade Importa
+## SLIDE 4: PCI DSS 4.0 — Open Source vs Comercial
 
-Aqui a gente define: **se achar um bug crítico, quanto tempo você tem pra corrigir?**
+Essa é a decisão financeira mais importante do projeto.
 
-CRITICAL (24 Horas): "Corrigir ou rollback imediato no K8s. Ex: RCE na API PIX."
-- Uma vulnerabilidade que permite alguém executar código arbitrário. Catastrófico.
-- Ação: você faz rollback imediato, ou faz patch de emergência em menos de 4 horas.
+Conformidade PCI DSS é mandatória para PIX. Não é opcional. E ao se preparar para auditoria, precisa provar que tem ferramentas de segurança. Aqui vem um equívoco comum:
 
-HIGH (7 Dias): "Priorização mandatória na sprint atual. Plano de mitigação ativo."
-- Exemplo: Auth bypass com múltiplos passos. É possível, mas precisa de 5 cliques.
-- Ação: Você prioriza isso na sprint que tá rodando, começa segunda-feira.
+"Ferramentas comerciais são caras, mas me passam na auditoria mais fácil."
 
-MEDIUM (30 Dias): "Inclusão no backlog da próxima sprint. Avaliação de impacto."
-- Exemplo: XSS em um campo que ninguém usa muito. É uma falha, mas risco moderado.
-- Ação: Entra no backlog, você resolve quando tiver tempo.
+Na verdade não. O que auditor quer é rastreabilidade. Se você usou SonarQube Community (open source) e documentou completamente, passa. Se usou uma ferramenta comercial cara mas não documentou o processo, não passa.
 
-LOW (90 Dias): "Envio para backlog técnico ou aceitação formal de risco documentada."
-- Exemplo: Um typo no comentário. Uma variável com nome ruim.
-- Ação: Backlog de tech debt, resolve depois.
+Open source oferece auditoria em código aberto. Você explica para auditor exatamente como funciona, porque o código está acessível. Ferramentas comerciais oferecem suporte de fornecedor, mas isso não é requisito para PCI DSS.
 
-A coisa que muita gente não entende: **métricas não funcionam sem visibilidade**. Se você não conseguir medir quanto tempo leva pra passar de "encontramos uma vulnerabilidade" pra "vulnerability is fixed", você não tem compliance. PCI DSS exige isso. Tudo em dashboard do Jira. Executive consegue ver em tempo real.
+O trade-off é real. Open source é mais barato, mais auditável, tem comunidade forte, mas você precisa de competência operacional. Comercial é mais caro, oferece menos transparência, oferece suporte premium, reduz burn-out do time.
+
+Escolhemos 80% open source porque uma fintech com 40 desenvolvedores não tem orçamento de 200 mil reais por ano em ferramentas de segurança. E porque open source é auditável. É direto.
+
+---
+
+## SLIDE 5: SLAs por Severidade — Porque Prioridade Importa
+
+Aqui definimos: quando encontram um bug crítico, quanto tempo você tem para corrigir?
+
+CRITICAL (24 Horas): Você precisa corrigir ou fazer rollback imediato no Kubernetes. Exemplo: Remote Code Execution na API PIX.
+- Significa uma vulnerabilidade que permite alguém executar código arbitrário no servidor.
+- Ação: rollback imediato ou patch de emergência em menos de 4 horas.
+
+HIGH (7 Dias): Priorização mandatória na sprint atual. Exemplo: autenticação que pode ser burlada com múltiplos passos.
+- É possível, mas requer 5 ações específicas.
+- Ação: entra na sprint atual, começa segunda-feira.
+
+MEDIUM (30 Dias): Inclusão no backlog da próxima sprint. Exemplo: XSS em um campo que poucos usuários usam.
+- É uma falha, mas risco moderado.
+- Ação: backlog, resolve quando houver espaço.
+
+LOW (90 Dias): Backlog técnico ou documentação de risco aceito. Exemplo: um typo em comentário.
+- Ação: tech debt, resolve depois.
+
+O ponto que muitos ignoram: métricas só funcionam com visibilidade. Se você não conseguir medir quanto tempo leva entre "encontramos uma vulnerabilidade" e "vulnerability is fixed in production", não tem compliance real. PCI DSS exige isso. Por isso colocamos tudo em dashboard do Jira — executivos conseguem ver em tempo real.
 
 ---
 
 ## SLIDE 6: Segurança Centralizada vs Distribuída
 
-Aqui vem o momento importante de **organização**.
+Momento crítico de decisão organizacional.
 
-MODELO CENTRALIZADO (Red X):
-"GARGALO. 1 time isolado vs 10 squads. Segurança vira o time do 'não'."
+MODELO CENTRALIZADO (marcado com X):
+"GARGALO. Um time isolado versus dez squads. Segurança vira o time que sempre diz não."
 
-Você tem 1 pessoa ou 1 time de segurança. 10 squads tentando fazer deploy. Todo deploy precisa de aprovação. Que acontece?
+Você tem uma pessoa ou um time de segurança. Dez squads tentando fazer deploy. Todo deploy precisa de aprovação deles. O que acontece?
 - Fila de espera cresce
-- Devs ficam frustrados
-- Segurança vira o vilão
-- Quando alguém encontra um jeito de desviar, desviam
+- Desenvolvedores ficam frustrados
+- Segurança vira percebida como obstáculo
+- Pessoas encontram maneiras de contornar os processos
 
-MODELO HUB & SPOKE (Green Check):
-"ESCALA. 1 Security Champion por squad. Segurança distribuída sem travar o release."
+MODELO HUB & SPOKE (marcado com check):
+"ESCALA. Um Security Champion por squad. Segurança distribuída sem travar releases."
 
-Cada squad tem 1 campeão que foi treinado. Não é full-time — é um dev que entende OWASP Top 10 e consegue fazer code review com lentes de segurança. Aprovação fica mais rápida porque o champion tá ali.
+Cada squad tem um desenvolvedor treinado em segurança. Não é full-time de segurança — é um desenvolvedor que entende OWASP Top 10 e consegue fazer revisão de código com perspectiva de segurança. Aprovações ficam mais rápidas porque o champion já está dentro do squad.
 
-E aqui tá a insight importante: "O Champion não é o responsável final. É o facilitador de design review e triage autônomo, com o Tech Lead atuando como sponsor."
+E há uma insight importante: "O Champion não é o responsável final. É o facilitador de design review e triage autônomo, com o Tech Lead atuando como sponsor."
 
-Ele não é autoridade absoluta. É um facilitador. Ele diz "ó, isso aqui é risky, vamo pensar diferente?" e o tech lead valida junto. Não criamos um novo bottleneck. Distribuímos conhecimento.
+Ele não é autoridade absoluta. É facilitador. Ele diz "isso aqui tem risco, vamos pensar diferente?" e o tech lead valida junto. Não criamos novo bottleneck. Distribuímos conhecimento.
 
 ---
 
-## SLIDE 7: O Roadmap de Maturidade (L1 → L3)
+## SLIDE 7: O Roadmap de Maturidade — L1 até L3
 
-MÊS 1 (L1: Base Ad-hoc):
-"Setup do Pipeline básico (Lint + SCA) e identificação dos Champions voluntários."
-- Coloca SonarQube rodando
+MÊS 1 (L1: Base ad-hoc):
+"Setup do pipeline básico (Lint + SCA) e identificação dos Champions voluntários."
+- SonarQube rodando
 - npm audit integrado
-- Escolhe os 5 champions
-- Longe de perfeito, mas vendo o que tá quebrado
+- Escolhe cinco champions
+- Longe de perfeito, mas com visibilidade inicial
 
 MÊS 2-3 (L2: Ferramentas Ativas):
-"Integração SAST + Secret Scan. Gate configurado (Bloqueio em Critical). Treinamento OWASP Top 10 para Champions."
+"Integração SAST + Secret Scan. Gate configurado (bloqueio em Critical). Treinamento OWASP Top 10 para Champions."
 - SAST bloqueia merge de código ruim
-- Secret scanning apanha credencial antes de commitar
-- Champions passaram por workshop
-- Visibilidade real
+- Secret scanning apanha credenciais antes do commit
+- Champions passam por workshop
+- Visibilidade real estabelecida
 
 MÊS 4-6 (L3: Automação Total):
 "DAST ativo no K8s. Geração de SBOM para auditoria PCI. Champions realizam triage autônomo com suporte de SLAs em dashboard corporativo."
-- DAST testa API de verdade
-- Relatórios de conformidade automáticos
-- Champions resolvem sozinhos
-- PCI DSS 80% mapeado
+- DAST testando API de verdade
+- Relatórios de conformidade gerados automaticamente
+- Champions resolvem problemas autonomamente
+- PCI DSS mapeado em 80%
 
-A mensagem: "De respostas ad-hoc a pipelines que barram vulnerabilidades críticas automaticamente antes da produção."
+A transição é de respostas ad-hoc para pipelines que barram vulnerabilidades críticas automaticamente antes da produção.
 
 ---
 
-## SLIDE 8: O Cofre Dinâmico - Go-To-Market Seguro
+## SLIDE 8: O Cofre Dinâmico — Go-To-Market Seguro
 
-Final. Sumarizamos tudo em 3 pilares:
+Na conclusão, resumimos em três pilares:
 
-**1. TECNOLOGIA**
+PRIMEIRO, TECNOLOGIA:
 "Pipeline Enterprise DevSecOps. Proteção automatizada ponta-a-ponta, do Node.js à infraestrutura AWS."
-- Tudo integrado, tudo falando junto
-- Do commit até produção, passa por escaneamento automatizado
+- Tudo integrado
+- Do commit até produção passa por escaneamento automatizado
 
-**2. PROCESSOS**
-"Conformidade PCI DSS 4.0. SLA Crítico de 24h suportado por ferramentas comerciais especializadas de alta precisão."
-- Não é "a gente acha que tá legal"
+SEGUNDO, PROCESSOS:
+"Conformidade PCI DSS 4.0. SLA crítico de 24 horas suportado por ferramentas especializadas de alta precisão."
+- Não é opinião
 - Tem SLA, tem métrica, tem evidência
 - Auditor consegue rastrear tudo
 
-**3. PESSOAS**
-"Escala Hub & Spoke. 1 Security Champion inserido em cada squad garantindo que o desenvolvimento nunca pare."
+TERCEIRO, PESSOAS:
+"Escala Hub & Spoke. Um Security Champion inserido em cada squad garantindo que desenvolvimento nunca pare."
 - Não é outsource de segurança
-- Cada squad tem seu campeão
+- Cada squad tem seu champion
 - Conhecimento distribuído
 
-E a última frase é o budget request: "Iniciar rollout do projeto piloto hoje garante a conformidade regulatória plena da API PIX em exatamente 6 meses."
+A última frase é o pedido de aprovação: "Iniciar rollout do projeto piloto hoje garante a conformidade regulatória plena da API PIX em exatamente 6 meses."
 
-Traduzindo: "Se começar segunda-feira, em 6 meses o PIX tá blindado. Se esperar, o risco cresce, a janela regulatória fica apertada, compliance vira problema."
+Significa: começar segunda-feira, em 6 meses o PIX está blindado. Se esperar, risco cresce, janela regulatória fica apertada, conformidade vira problema.
 
 ---
 
-## CONCLUSÃO: O Pulo do Gato
+## FECHAMENTO
 
-Tá todo mundo falando em "shift-left" em segurança. "Ah, devs precisam pensar em segurança no design."
+Toda indústria fala em "shift-left" em segurança. "Desenvolvedores precisam pensar em segurança no design."
 
-Verdade. Mas como você faz isso com 40 devs em 5 squads se ninguém foi treinado, se não tem ferramenta, se não tem tempo?
+É verdade. Mas como fazer isso com 40 desenvolvedores em 5 squads se ninguém foi treinado, não tem ferramenta, não tem tempo?
 
-Resposta: você estrutura em L1 → L3. Começa com o básico (SAST), prova que funciona, treina pessoas, depois sobe sofisticação (threat modeling, DAST). Incrementalismo seguro.
+A resposta: estruturar em L1 até L3. Começar com o básico (SAST), provar que funciona, treinar pessoas, depois aumentar sofisticação (threat modeling, DAST). Incrementalismo estruturado.
 
-Isso que a gente desenhou aqui não é ficção. É o que tá funcionando em fintech séria. A gente sabe porque literalmente copiou de startups que cresceram de zero a unicórnio sem ser hacked.
+O que apresentamos aqui não é teórico. É o que está funcionando em fintechs sérias. Copiamos de startups que cresceram de zero para unicórnio sem sofrer ataques críticos no processo.
 
-Então, o convite é esse: **em 6 meses, o PIX de vocês tá na nuvem, seguro, e auditável.**
+Então o convite é este: em 6 meses, a API PIX de vocês está na nuvem, segura, e auditável.
 
-Vamo?
+Obrigado pela atenção.
+
