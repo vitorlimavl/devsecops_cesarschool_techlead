@@ -4,7 +4,7 @@
 
 ---
 
-## 🎯 Definição
+##  Definição
 
 **Security Champion** é um desenvolvedor designado que atua como:
 1. **Multiplicador** de conhecimento de segurança no squad
@@ -16,7 +16,7 @@
 
 ---
 
-## 📋 Competências Requeridas
+##  Competências Requeridas
 
 ### **Mínimo (L1)**
 - 3+ anos de experiência em desenvolvimento
@@ -34,7 +34,7 @@
 
 ---
 
-## 🧑‍💼 Papel por Squad
+##  Papel por Squad
 
 ### **Squad Champions (4-5 pessoas)**
 
@@ -68,7 +68,7 @@
 
 ---
 
-## 🎖️ Global Champion (1 pessoa)
+##  Global Champion (1 pessoa)
 
 **Tempo dedicado:** 40-50% (2 dias/semana)
 
@@ -105,7 +105,7 @@
 
 ---
 
-## 📅 Implementação - 4 Fases
+##  Implementação - 4 Fases
 
 ### **Fase 1: Seleção (Semana 1)**
 
@@ -138,7 +138,7 @@
 
 ---
 
-## 💬 Responsabilidades Detalhadas
+##  Responsabilidades Detalhadas
 
 ### **Code Review Checklist**
 
@@ -167,7 +167,7 @@
 
 ---
 
-## 📈 Métricas de Sucesso
+##  Métricas de Sucesso
 
 **Por Squad Champion:**
 - Code review latency: < 15 min (target: 95%)
@@ -183,7 +183,7 @@
 
 ---
 
-## 🚀 Começar Hoje
+##  Começar Hoje
 
 **Próximos passos:**
 1. [ ] Identificar 5 devs para serem Champions

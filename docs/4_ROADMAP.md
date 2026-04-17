@@ -4,16 +4,16 @@
 
 ---
 
-## 📅 Timeline Overview
+##  Timeline Overview
 
 ```
-Mês 1   │ Mês 2  │ Mês 3  │ Mês 4  │ Mês 5  │ Mês 6
-L1      │ L1.5   │ L2     │ L2.5   │ L3     │ L3+
+Mês 1    Mês 2   Mês 3   Mês 4   Mês 5   Mês 6
+L1       L1.5    L2      L2.5    L3      L3+
 ```
 
 ---
 
-## 🔴 MÊS 1: L1 - REATIVO (Detecção)
+##  MÊS 1: L1 - REATIVO (Detecção)
 
 **Objetivo:** Visibilidade rápida. Sem bloqueios ao pipeline.
 
@@ -43,7 +43,7 @@ L1      │ L1.5   │ L2     │ L2.5   │ L3     │ L3+
 
 ---
 
-## 🟠 MÊS 2: L1.5 - REATIVO + DAST
+##  MÊS 2: L1.5 - REATIVO + DAST
 
 **Objetivo:** Começar dinâmico + começar a detectar lógica.
 
@@ -65,7 +65,7 @@ L1      │ L1.5   │ L2     │ L2.5   │ L3     │ L3+
 
 ---
 
-## 🟡 MÊS 3: L2 - PROATIVO
+##  MÊS 3: L2 - PROATIVO
 
 **Objetivo:** Começar a pensar em Design. Threat modeling.
 
@@ -86,7 +86,7 @@ L1      │ L1.5   │ L2     │ L2.5   │ L3     │ L3+
 
 ---
 
-## 🟢 MÊS 4: L2.5 - PROATIVO + DESIGN
+##  MÊS 4: L2.5 - PROATIVO + DESIGN
 
 **Objetivo:** Integrar segurança em design.
 
@@ -108,7 +108,7 @@ L1      │ L1.5   │ L2     │ L2.5   │ L3     │ L3+
 
 ---
 
-## 🟢 MÊS 5: L3 - PREVENTIVO
+##  MÊS 5: L3 - PREVENTIVO
 
 **Objetivo:** Cultura de segurança. Automação matura.
 
@@ -129,7 +129,7 @@ L1      │ L1.5   │ L2     │ L2.5   │ L3     │ L3+
 
 ---
 
-## 🔵 MÊS 6: L3+ - CONTÍNUO
+##  MÊS 6: L3+ - CONTÍNUO
 
 **Objetivo:** Excelência. Antecipação. Inovação.
 
@@ -143,7 +143,7 @@ L1      │ L1.5   │ L2     │ L2.5   │ L3     │ L3+
 
 ---
 
-## 💰 Investimento por Fase
+##  Investimento por Fase
 
 | Mês | Pessoas | Ferramentas | Total |
 |-----|---------|-----------|-------|

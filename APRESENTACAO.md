@@ -4,7 +4,7 @@
 
 ---
 
-## 🎯 1. Pipeline Ideal
+##  1. Pipeline Ideal
 
 ### Stages:
 1. **SAST** (SonarQube) - 5 min
@@ -19,7 +19,7 @@
 
 ---
 
-## 💰 2. Ferramentas: Open Source vs Comercial
+##  2. Ferramentas: Open Source vs Comercial
 
 ### **Decisão: 80% Open Source + 20% Comercial**
 
@@ -42,14 +42,14 @@
 
 | Severidade | Resposta | Resolução |
 |-----------|----------|-----------|
-| 🔴 CRITICAL | 15 min | 4 h |
-| 🟠 HIGH | 1 h | 1 dia |
-| 🟡 MEDIUM | 4 h | 1 semana |
-| 🟢 LOW | 1 semana | 30 dias |
+|  CRITICAL | 15 min | 4 h |
+|  HIGH | 1 h | 1 dia |
+|  MEDIUM | 4 h | 1 semana |
+|  LOW | 1 semana | 30 dias |
 
 ---
 
-## 📈 4. Roadmap 6 Meses
+##  4. Roadmap 6 Meses
 
 - **Mês 1-2:** SAST + Container (L1)
 - **Mês 3-4:** DAST + Threat Model (L2)
@@ -59,7 +59,7 @@
 
 ---
 
-## 🛡️ 5. Security Champions
+##  5. Security Champions
 
 **Estrutura:**
 - 5 Squad Champions (10-15% tempo)
@@ -72,36 +72,36 @@
 
 ---
 
-## 🎯 6. STRIDE - PIX Payment API
+##  6. STRIDE - PIX Payment API
 
 **10 threats identificados:**
 
 | Ameaça | Severidade |
 |--------|-----------|
-| Session Hijacking | 🔴 CRITICAL |
-| SQL Injection | 🔴 CRITICAL |
-| Authz Bypass | 🔴 CRITICAL |
-| Secrets Leaked | 🔴 CRITICAL |
-| IDOR | 🔴 CRITICAL |
-| Weak Password | 🟠 HIGH |
-| Rate Limiting | 🟠 HIGH |
+| Session Hijacking |  CRITICAL |
+| SQL Injection |  CRITICAL |
+| Authz Bypass |  CRITICAL |
+| Secrets Leaked |  CRITICAL |
+| IDOR |  CRITICAL |
+| Weak Password |  HIGH |
+| Rate Limiting |  HIGH |
 
 **Status:** 85% mitigações implementadas
 
 ---
 
-## 📊 Resumo: Critérios de Avaliação
+##  Resumo: Critérios de Avaliação
 
 | Critério | Nota |
 |----------|------|
-| Viabilidade | ✅ 95% |
-| Priorização | ✅ 95% |
-| Trade-offs | ✅ 90% |
-| Clareza | ✅ 95% |
+| Viabilidade |  95% |
+| Priorização |  95% |
+| Trade-offs |  90% |
+| Clareza |  95% |
 
 ---
 
-## 🚀 Próximos Passos (Semana 1)
+##  Próximos Passos (Semana 1)
 
 1. Designar Champions
 2. Setup GitHub Actions

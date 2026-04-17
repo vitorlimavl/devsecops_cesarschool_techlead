@@ -1,6 +1,6 @@
 # 2. Análise de Ferramentas: Open Source vs Comercial
 
-## 🎯 Decisão: 80% Open Source + 20% Comercial
+##  Decisão: 80% Open Source + 20% Comercial
 
 **Justificativa geral:**
 - Fintech com budget moderado (~40 devs = US$ 2-3M/ano)
@@ -9,15 +9,15 @@
 
 ---
 
-## 📋 Ferramentas por Categoria
+##  Ferramentas por Categoria
 
 ### **1. SAST (Static Analysis)**
 
-#### ❌ REJEITADO: Checkmarx / Fortify (Comercial)
+####  REJEITADO: Checkmarx / Fortify (Comercial)
 - Custo: US$ 100k+/ano
 - Motivo: Overkill para 5 squads, high latency
 
-#### ✅ ESCOLHIDO: SonarQube Community (Open Source)
+####  ESCOLHIDO: SonarQube Community (Open Source)
 - Custo: Gratuito (Community Edition)
 - Vantagens:
   - Roda localmente / on-premises
@@ -29,7 +29,7 @@
 
 ### **2. DAST (Dynamic Analysis)**
 
-#### ✅ ESCOLHIDO: OWASP ZAP (Open Source)
+####  ESCOLHIDO: OWASP ZAP (Open Source)
 - Custo: Gratuito
 - Vantagens:
   - Industry standard (OWASP)
@@ -41,7 +41,7 @@
 
 ### **3. Container Scanning**
 
-#### ✅ ESCOLHIDO: Trivy (Open Source)
+####  ESCOLHIDO: Trivy (Open Source)
 - Custo: Gratuito
 - Vantagens:
   - Escaneia imagens Docker
@@ -53,7 +53,7 @@
 
 ### **4. IaC Scanning**
 
-#### ✅ ESCOLHIDO: Checkov (Open Source)
+####  ESCOLHIDO: Checkov (Open Source)
 - Custo: Gratuito
 - Vantagens:
   - Suporta K8s + Terraform
@@ -64,7 +64,7 @@
 
 ### **5. Log & Monitoring**
 
-#### ✅ ESCOLHIDO: AWS CloudTrail + CloudWatch (Comercial, já pago)
+####  ESCOLHIDO: AWS CloudTrail + CloudWatch (Comercial, já pago)
 - Fintech: auditoria é mandatória
 - Não adiciona custo extra (já em conta AWS)
 
@@ -72,7 +72,7 @@
 
 ### **6. Runtime Security**
 
-#### ✅ ESCOLHIDO: Falco (Open Source)
+####  ESCOLHIDO: Falco (Open Source)
 - Custo: Gratuito
 - eBPF-based (kernel-level)
 - Detecta comportamentos anormais
@@ -80,7 +80,7 @@
 
 ---
 
-## 💰 Estimativa de Custo (Anual)
+##  Estimativa de Custo (Anual)
 
 | Ferramenta | Tipo | Custo |
 |-----------|------|-------|
