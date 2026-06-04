@@ -238,14 +238,17 @@ jobs:
       - name: Checkout código
         uses: actions/checkout@v4
 
-      - name: Instalar kubectl
-        uses: azure/setup-kubectl@v3
+      - name: Instalar kubeconform (validação de manifesto offline)
+        run: |
+          curl -sL https://github.com/yannh/kubeconform/releases/latest/download/kubeconform-linux-amd64.tar.gz | tar xz
+          chmod +x kubeconform
 
       - name: Validar manifestos Kubernetes
         run: |
-          kubectl apply --dry-run=client --validate=false -f k8s/deployment.yaml
-          kubectl apply --dry-run=client --validate=false -f k8s/service.yaml
-          echo "✅ Manifestos Kubernetes validados (dry-run)"
+          ./kubeconform -strict k8s/deployment.yaml
+          ./kubeconform -strict k8s/service.yaml
+          ./kubeconform -strict k8s/network-policy.yaml
+          echo "✅ Manifestos Kubernetes validados com kubeconform"
 
       - name: Resumo do Deploy
         run: |
