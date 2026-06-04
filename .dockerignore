@@ -1,0 +1,14 @@
+node_modules
+npm-debug.log
+.git
+.gitignore
+tests
+*.test.js
+coverage
+.eslintrc.json
+README.md
+docs
+evidencias
+praticas
+k8s
+.github
