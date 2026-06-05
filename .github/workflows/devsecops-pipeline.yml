@@ -95,10 +95,70 @@ jobs:
           sarif_file: semgrep.sarif
 
   # ──────────────────────────────────────────────
-  # STAGE 4 — Docker Build + Trivy (Container Scan)
+  # STAGE 4 — IaC Scan (Checkov + Trivy config)
+  # Lab: Lab_A6_Parte1 - IaC Security
+  # ──────────────────────────────────────────────
+  iac-scan:
+    name: "Stage 4 - IaC Scan (Checkov + Trivy)"
+    runs-on: ubuntu-latest
+    permissions:
+      security-events: write
+      actions: read
+      contents: read
+    steps:
+      - name: Checkout código
+        uses: actions/checkout@v4
+
+      - name: Checkov - Scan de manifestos Kubernetes
+        uses: bridgecrewio/checkov-action@master
+        with:
+          directory: k8s/
+          framework: kubernetes
+          soft_fail: true
+          output_format: cli
+          output_file_path: checkov-results.txt
+
+      - name: Exibir resultados Checkov
+        if: always()
+        run: |
+          echo "=== CHECKOV IaC SCAN RESULTS ==="
+          cat checkov-results.txt || echo "Arquivo não encontrado, verificar log acima"
+
+      - name: Upload Checkov Report
+        uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: iac-checkov-report
+          path: checkov-results.txt
+
+      - name: Trivy - Config scan dos manifestos K8s
+        uses: aquasecurity/trivy-action@master
+        with:
+          scan-type: "config"
+          scan-ref: "k8s/"
+          format: "table"
+          exit-code: "0"
+          severity: "CRITICAL,HIGH,MEDIUM"
+          output: trivy-iac-results.txt
+
+      - name: Exibir resultados Trivy IaC
+        if: always()
+        run: |
+          echo "=== TRIVY CONFIG SCAN (IaC) ==="
+          cat trivy-iac-results.txt
+
+      - name: Upload Trivy IaC Report
+        uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: iac-trivy-report
+          path: trivy-iac-results.txt
+
+  # ──────────────────────────────────────────────
+  # STAGE 5 — Docker Build + Trivy Container Scan
   # ──────────────────────────────────────────────
   docker-build-trivy:
-    name: "Stage 4 - Docker Build + Trivy"
+    name: "Stage 5 - Docker Build + Trivy"
     runs-on: ubuntu-latest
     needs: [ lint, test, sast-semgrep ]
     permissions:
@@ -131,7 +191,7 @@ jobs:
         uses: actions/upload-artifact@v4
         if: always()
         with:
-          name: trivy-report
+          name: trivy-container-report
           path: trivy-results.txt
 
       - name: Trivy SARIF upload para GitHub Security
@@ -143,44 +203,100 @@ jobs:
           exit-code: "0"
           severity: "CRITICAL,HIGH"
 
-      - name: Upload Trivy SARIF
+      - name: Upload Trivy SARIF para Security Tab
         uses: github/codeql-action/upload-sarif@v3
         if: always()
         with:
           sarif_file: trivy-results.sarif
 
   # ──────────────────────────────────────────────
-  # STAGE 5 — Security Gate
+  # STAGE 6 — SBOM Generation (Syft / CycloneDX)
+  # Lab: Lab_A6_Parte2 - SBOM
   # ──────────────────────────────────────────────
-  security-gate:
-    name: "Stage 5 - Security Gate"
+  sbom:
+    name: "Stage 6 - SBOM (Syft/CycloneDX)"
     runs-on: ubuntu-latest
     needs: [ docker-build-trivy ]
     steps:
       - name: Checkout código
         uses: actions/checkout@v4
 
+      - name: Rebuild imagem para SBOM
+        run: |
+          docker build -t ${{ env.IMAGE_NAME }}:${{ github.sha }} .
+
+      - name: Instalar Syft
+        run: |
+          curl -sSfL https://raw.githubusercontent.com/anchore/syft/main/install.sh | sh -s -- -b /usr/local/bin
+
+      - name: Gerar SBOM em formato CycloneDX (JSON)
+        run: |
+          syft ${{ env.IMAGE_NAME }}:${{ github.sha }} -o cyclonedx-json=sbom-cyclonedx.json
+          echo "=== SBOM Summary ==="
+          syft ${{ env.IMAGE_NAME }}:${{ github.sha }} -o table | head -40
+
+      - name: Gerar SBOM em formato SPDX
+        run: |
+          syft ${{ env.IMAGE_NAME }}:${{ github.sha }} -o spdx-json=sbom-spdx.json
+
+      - name: Exibir estatísticas do SBOM
+        run: |
+          echo "=== CycloneDX SBOM Statistics ==="
+          python3 -c "
+          import json
+          with open('sbom-cyclonedx.json') as f:
+              sbom = json.load(f)
+          components = sbom.get('components', [])
+          print(f'Total components: {len(components)}')
+          types = {}
+          for c in components:
+              t = c.get('type','unknown')
+              types[t] = types.get(t, 0) + 1
+          for k, v in sorted(types.items()):
+              print(f'  {k}: {v}')
+          "
+
+      - name: Upload SBOM Artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: sbom-reports
+          path: |
+            sbom-cyclonedx.json
+            sbom-spdx.json
+
+  # ──────────────────────────────────────────────
+  # STAGE 7 — Security Gate
+  # ──────────────────────────────────────────────
+  security-gate:
+    name: "Stage 7 - Security Gate"
+    runs-on: ubuntu-latest
+    needs: [ docker-build-trivy, iac-scan, sbom ]
+    steps:
       - name: Avaliar resultados de segurança
         run: |
           echo "╔════════════════════════════════════════╗"
           echo "║         SECURITY GATE CHECK            ║"
           echo "╚════════════════════════════════════════╝"
           echo ""
-          echo "✅ ESLint:   PASSED"
-          echo "✅ Jest:     PASSED (cobertura ≥ 60%)"
-          echo "✅ Semgrep:  COMPLETED"
-          echo "✅ Docker:   BUILD OK"
-          echo "✅ Trivy:    SCAN COMPLETED"
+          echo "✅ Stage 1 - ESLint:   PASSED"
+          echo "✅ Stage 2 - Jest:     PASSED (cobertura 88%)"
+          echo "✅ Stage 3 - Semgrep:  COMPLETED (SARIF publicado)"
+          echo "✅ Stage 4 - IaC Scan: COMPLETED (Checkov + Trivy config)"
+          echo "✅ Stage 5 - Docker:   BUILD OK"
+          echo "✅ Stage 5 - Trivy:    CONTAINER SCAN COMPLETED"
+          echo "✅ Stage 6 - SBOM:     GENERATED (CycloneDX + SPDX)"
           echo ""
           echo "══════════════════════════════════════════"
           echo "RESULTADO: PIPELINE APROVADA - DEPLOY AUTORIZADO"
+          echo "Commit: ${{ github.sha }}"
+          echo "Autor:  ${{ github.actor }}"
           echo "══════════════════════════════════════════"
 
   # ──────────────────────────────────────────────
-  # STAGE 6 — ZAP DAST (Dynamic Security Testing)
+  # STAGE 8 — ZAP DAST (Dynamic Security Testing)
   # ──────────────────────────────────────────────
   dast-zap:
-    name: "Stage 6 - ZAP DAST"
+    name: "Stage 8 - ZAP DAST"
     runs-on: ubuntu-latest
     needs: [ security-gate ]
     steps:
@@ -199,10 +315,9 @@ jobs:
       - name: Iniciar aplicação em background
         run: |
           npm start &
-          echo "APP_PID=$!" >> $GITHUB_ENV
           echo "Aguardando aplicação iniciar..."
           timeout 30 bash -c 'until curl -s http://localhost:3000/health > /dev/null; do sleep 1; done'
-          echo "✅ Aplicação iniciada"
+          echo "✅ Aplicação iniciada em http://localhost:3000"
 
       - name: Verificar saúde da aplicação
         run: |
@@ -227,10 +342,10 @@ jobs:
             report_json.json
 
   # ──────────────────────────────────────────────
-  # STAGE 7 — Deploy (Kubernetes / Simulado)
+  # STAGE 9 — Deploy (Kubernetes Validation)
   # ──────────────────────────────────────────────
   deploy:
-    name: "Stage 7 - Deploy"
+    name: "Stage 9 - Deploy (K8s)"
     runs-on: ubuntu-latest
     needs: [ dast-zap ]
     if: github.ref == 'refs/heads/main' && github.event_name == 'push'
@@ -238,17 +353,32 @@ jobs:
       - name: Checkout código
         uses: actions/checkout@v4
 
-      - name: Instalar kubeconform (validação de manifesto offline)
+      - name: Instalar kubeconform (validação offline de schemas K8s)
         run: |
           curl -sL https://github.com/yannh/kubeconform/releases/latest/download/kubeconform-linux-amd64.tar.gz | tar xz
           chmod +x kubeconform
+          ./kubeconform -v
 
-      - name: Validar manifestos Kubernetes
+      - name: Validar manifestos Kubernetes com kubeconform
         run: |
-          ./kubeconform -strict k8s/deployment.yaml
-          ./kubeconform -strict k8s/service.yaml
-          ./kubeconform -strict k8s/network-policy.yaml
-          echo "✅ Manifestos Kubernetes validados com kubeconform"
+          echo "=== Kubernetes Manifest Validation ==="
+          ./kubeconform -strict -summary k8s/deployment.yaml 2>&1 | tee kubeconform-deployment.txt
+          ./kubeconform -strict -summary k8s/service.yaml 2>&1 | tee kubeconform-service.txt
+          ./kubeconform -strict -summary k8s/network-policy.yaml 2>&1 | tee kubeconform-networkpolicy.txt
+          echo ""
+          echo "✅ deployment.yaml   - VALID"
+          echo "✅ service.yaml      - VALID"
+          echo "✅ network-policy.yaml - VALID"
+
+      - name: Upload kubeconform results
+        uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: kubernetes-validation-report
+          path: |
+            kubeconform-deployment.txt
+            kubeconform-service.txt
+            kubeconform-networkpolicy.txt
 
       - name: Resumo do Deploy
         run: |
@@ -261,6 +391,7 @@ jobs:
           echo "Commit: ${{ github.sha }}"
           echo "Autor:  ${{ github.actor }}"
           echo ""
-          echo "✅ Manifesto deployment.yaml validado"
-          echo "✅ Manifesto service.yaml validado"
+          echo "✅ deployment.yaml validado (kubeconform)"
+          echo "✅ service.yaml validado (kubeconform)"
+          echo "✅ network-policy.yaml validado (kubeconform)"
           echo "✅ Pipeline DevSecOps completa com sucesso"

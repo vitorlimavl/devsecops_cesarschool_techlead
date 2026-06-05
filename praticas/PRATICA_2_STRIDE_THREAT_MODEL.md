@@ -240,17 +240,15 @@ POST /api/v1/transfer
 
 ---
 
-## 5. Evidência de Commits
+## 5. Implementação no Repositório
 
-```
-d3a8c7 - fix: enforce JWT expiration on transfer endpoint
-e4f2b1 - fix: validate recipient against whitelist
-a9c1d5 - fix: mask PII in error logs
-c2b7f3 - feat: implement rate limiting on transfer
-b5e8a2 - fix: add ownership check for IDOR prevention
-```
+As mitigações identificadas na análise STRIDE estão implementadas no código do repositório:
 
-Todos commitados no branch `feature/security-hardening-transfer`.
+- `src/transfer.js` — validação de entrada, rate limiting (`express-rate-limit`)
+- `src/utils/validator.js` — validação rigorosa de `senderId`, `recipientId`, `amount`
+- `src/index.js` — handler de erro genérico (sem exposição de stack traces)
+
+O Semgrep (Stage 3 do pipeline) detecta automaticamente padrões inseguros que o STRIDE identifica teoricamente, fechando o ciclo entre threat modeling e detecção automatizada.
 
 ---
 

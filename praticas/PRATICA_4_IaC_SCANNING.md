@@ -396,28 +396,27 @@ FAILED: 0
 
 ---
 
-## 6. Commits e Resultado
+## 6. Evidência Real no Pipeline
 
-```bash
-# Commits realizados:
+O IaC Scan está implementado no Stage 4 do pipeline (`.github/workflows/devsecops-pipeline.yml`):
 
-4b2e8a - feat: Add Checkov IaC scanning to CI/CD
-        - GitHub Actions workflow para K8s validation
-        - Config file com PCI DSS relevant checks
-
-7c9f3d - fix: Remediate Kubernetes manifest security issues
-        - Remove latest image tag
-        - Add resource limits
-        - Run as non-root user
-        - Add liveness/readiness probes
-        - Use secrets for sensitive data
-
-e1a5b2 - feat: Add NetworkPolicy for pod isolation
-        - Restrict ingress to api-gateway only
-        - Restrict egress to database only
-        - Allow DNS for service discovery
-
+```yaml
+iac-scan:
+  name: "Stage 4 - IaC Scan (Checkov + Trivy)"
+  steps:
+    - uses: bridgecrewio/checkov-action@master
+      with:
+        directory: k8s/
+        framework: kubernetes
+    - uses: aquasecurity/trivy-action@master
+      with:
+        scan-type: "config"
+        scan-ref: "k8s/"
 ```
+
+Os manifestos em `k8s/` (`deployment.yaml`, `service.yaml`, `network-policy.yaml`) são os arquivos reais escaneados pelo Checkov e Trivy em cada execução do pipeline.
+
+Artifacts gerados: `iac-checkov-report` e `iac-trivy-report` — disponíveis na aba Actions do repositório.
 
 ---
 
